@@ -10,9 +10,7 @@ export default function NavBar() {
       </div>
 
       <div className="navbar-end">
-        <Link to="/reports" className="btn btn-ghost">
-          Reports
-        </Link>
+        <Link to="/availability">Availability</Link>
       </div>
     </div>
   );
