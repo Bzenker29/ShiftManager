@@ -9,7 +9,10 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/availability" element={<AvailabilityPage />} />
+        <Route
+          path="/availability/:employeeId?"
+          element={<AvailabilityPage />}
+        />
       </Routes>
     </>
   );
