@@ -1,96 +1,159 @@
 # ShiftManager
 
-Developer Guide:
-At the time of development:
+ShiftManager is a full-stack employee scheduling and availability management application built with React, Node.js, Express, and PostgreSQL.
 
-Node.js v 24.11.1  
-React.js v 5.1.0  
-PostgreSQL/PGAdmin v 18
+====================
+TECH STACK
+====================
 
-To install the latest node version:
+Frontend:
 
-```
+- React (Vite)
+- Tailwind CSS
+- DaisyUI
+- FullCalendar
+
+Backend:
+
+- Node.js
+- Express
+- PostgreSQL
+- pg
+- dotenv
+- cors
+
+====================
+VERSIONS USED
+====================
+
+Node.js v24.11.1  
+React v5.1.0  
+PostgreSQL / pgAdmin v18
+
+====================
+SETUP INSTRUCTIONS
+====================
+
+Install latest Node:
 npm install npm@latest -g
-```
 
-To install nodemon use:
-
-```
+Install Nodemon:
 npm install -g nodemon
-```
 
-Make sure to clone the repo from GitHub:  
+====================
+CLONE REPOSITORY
+====================
+
 git clone https://github.com/Bzenker29/ShiftManager.git
+cd ShiftManager
 
-Create your own branch so you do not push directly to main:
+====================
+GIT WORKFLOW
+====================
 
-```
-git branch "branch name"
-git checkout "branch name"
-```
+Create a new branch:
+git branch <branch-name>
+git checkout <branch-name>
 
-Once you make a push from your branch make sure to get oversight and merge with main:
-
-```
+Merge to main after review:
 git checkout main
-git merge branch "branch name"
+git merge <branch-name>
 git push origin main
-```
 
-Frontend was created with:
+Do NOT push directly to main.
 
-```
+====================
+FRONTEND SETUP
+====================
+
+Create Vite app:
 npm create vite@latest
-```
 
-Select React, and then Javascript
+Select:
 
-Cd into the front end folder and then install tailwind css
+- React
+- JavaScript
 
-```
+Install dependencies:
+cd frontend
+npm install
+
+Install Tailwind:
 npm install tailwindcss @tailwindcss/vite
-```
 
-Install Daisy ui after tailwind is setup
+Install DaisyUI:
+npm install -D daisyui@latest
 
-```
-npm i -D daisyui@latest
-```
+Install FullCalendar:
+npm install @fullcalendar/react @fullcalendar/timegrid @fullcalendar/daygrid
 
-To create the backend we started with
+Run frontend:
+npm run dev
 
-```
+====================
+BACKEND SETUP
+====================
+
+cd backend
 npm init -y
-```
 
-Followed with
+Install backend dependencies:
+npm install express cors pg dotenv
 
-```
-npm i express dotenv
-```
+In package.json, add:
+"type": "module"
 
-Make sure "type" is defined as "module" in package.json
-
-To start the server you must cd into the backend folder and use
-
-```
+Run backend:
 nodemon src/index.js
-```
 
-Install cors using
+====================
+DATABASE SETUP
+====================
 
-```
-npm i cors pg dotenv
-```
+Install PostgreSQL and pgAdmin.
 
-Make sure to install postgres and pg admin
+Create backend/.env file:
 
-Install postman
-Must be done throw you browser
-Not really necessary but nice when testing JSON's and seeing if the server is working
+PG_USER=your_db_user
+PG_HOST=localhost
+PG_NAME=your_db_name
+PG_PASSWORD=your_db_password
+PG_PORT=5432
 
-Install react-router-dom
+Do NOT commit .env files.
 
-```
-npm install react react-dom
-```
+====================
+API TESTING
+====================
+
+Postman is recommended for testing API routes and JSON responses.
+
+====================
+PROJECT STRUCTURE
+====================
+
+ShiftManager/
+├── frontend/
+│ ├── src/
+│ ├── pages/
+│ ├── components/
+│ └── main.jsx
+├── backend/
+│ ├── src/
+│ │ ├── routes/
+│ │ ├── controllers/
+│ │ ├── services/
+│ │ ├── db.js
+│ │ └── index.js
+└── README.md
+
+====================
+FEATURES
+====================
+
+- Employee management
+- Availability (unavailability) tracking
+- Daily, weekly, and monthly calendar views
+- REST API backend
+- PostgreSQL database
+- FullCalendar integration
