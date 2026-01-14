@@ -4,49 +4,48 @@ export default function UnavailabilityModal({
   isOpen,
   onClose,
   onSave,
+  onDelete,
   initialData,
   employees = [],
 }) {
-  const [dayOfWeek, setDayOfWeek] = useState(0);
+  const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [employeeId, setEmployeeId] = useState("");
-
-  const dayLabels = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  const [availabilityId, setAvailabilityId] = useState(null); // NEW: row id
 
   // Initialize form when modal opens
   useEffect(() => {
     if (!isOpen) return;
+
     if (initialData) {
-      setDayOfWeek(initialData.day_of_week || 0);
+      setEmployeeId(initialData.employee_id || "");
+      setDate(initialData.date || "");
       setStartTime(initialData.start_time || "");
       setEndTime(initialData.end_time || "");
+      setAvailabilityId(initialData.id || null); // store the id for edits
     } else {
-      setDayOfWeek(0);
+      setEmployeeId("");
+      setDate("");
       setStartTime("");
       setEndTime("");
+      setAvailabilityId(null);
     }
   }, [initialData, isOpen]);
 
   if (!isOpen) return null;
 
+  const normalizeTime = (time) => (time.length === 5 ? `${time}:00` : time);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Pass employeeId along with times
     onSave({
-      employee_id: employeeId,
-      day_of_week: dayOfWeek,
-      start_time: startTime,
-      end_time: endTime,
+      id: availabilityId,
+      employee_id: Number(employeeId),
+      date, // YYYY-MM-DD
+      start_time: normalizeTime(startTime),
+      end_time: normalizeTime(endTime),
     });
   };
 
@@ -58,22 +57,22 @@ export default function UnavailabilityModal({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0,0,0,0.5)", // overlay
+        backgroundColor: "rgba(0,0,0,0.5)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        zIndex: 1000, // below form
+        zIndex: 1000,
       }}
     >
       <form
         onSubmit={handleSubmit}
         style={{
-          backgroundColor: "#ffffff", // solid white instead of CSS variable
-          color: "#000000", // make text readable
+          backgroundColor: "#ffffff",
+          color: "#000000",
           padding: "2rem",
           borderRadius: "0.5rem",
           minWidth: "320px",
-          boxShadow: "0 5px 15px rgba(0,0,0,0.3)", // subtle shadow for contrast
+          boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
           zIndex: 1001,
         }}
       >
@@ -97,24 +96,17 @@ export default function UnavailabilityModal({
             </select>
           </label>
         </div>
-        <br />
         <div className="mb-4">
           <label>
-            Day of Week:
-            <select
-              value={dayOfWeek}
-              onChange={(e) => setDayOfWeek(parseInt(e.target.value))}
+            Date Unavailable:
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
               required
-            >
-              {dayLabels.map((d, i) => (
-                <option key={i} value={i}>
-                  {d}
-                </option>
-              ))}
-            </select>
+            />
           </label>
         </div>
-        <br />
         <div className="mb-4">
           <label>
             Start Time:
@@ -126,7 +118,6 @@ export default function UnavailabilityModal({
             />
           </label>
         </div>
-        <br />
         <div className="mb-4">
           <label>
             End Time:
@@ -138,14 +129,40 @@ export default function UnavailabilityModal({
             />
           </label>
         </div>
-        <br />
+        <div className="flex justify-between items-center mt-6 gap-4">
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition"
+          >
+            Save
+          </button>
 
-        <button type="submit" style={{ marginRight: "1rem" }}>
-          Save
-        </button>
-        <button type="button" onClick={onClose}>
-          Cancel
-        </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded shadow transition"
+          >
+            Cancel
+          </button>
+
+          {initialData && (
+            <button
+              type="button"
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded shadow transition"
+              onClick={() => {
+                if (
+                  confirm(
+                    "Are you sure you want to delete this unavailability?"
+                  )
+                ) {
+                  onDelete(initialData.id);
+                }
+              }}
+            >
+              Delete
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );
