@@ -10,17 +10,20 @@ import {
 // POST /api/availability/:employeeId
 export const createAvailabilityController = async (req, res) => {
   try {
-    console.log("🟡 createAvailabilityController");
     const { date, start_time, end_time, employee_id } = req.body;
+    const userId = req.user.id;
 
-    const newAvailability = await createAvailability(
-      employee_id, // use body value
-      date,
-      start_time,
-      end_time
+    const result = await query(
+      `
+      INSERT INTO employee_availability_tb
+        (user_id, employee_id, date, start_time, end_time)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *
+      `,
+      [userId, employee_id, date, start_time, end_time]
     );
 
-    res.status(201).json(newAvailability);
+    res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to create availability" });
@@ -43,17 +46,22 @@ export const getAvailabilityController = async (req, res) => {
 // NEW: GET all availability for all employees
 export const getAllAvailabilityController = async (req, res) => {
   try {
-    console.log("🟡 getAllAvailabilityController");
+    const userId = req.user.id;
+
     const { rows } = await query(
-      `SELECT a.*, e.name 
-       FROM employee_availability_tb a
-       JOIN employees_tb e ON a.employee_id = e.id
-       ORDER BY a.employee_id, a.date`
+      `
+      SELECT a.*, e.name
+      FROM employee_availability_tb a
+      JOIN employees_tb e ON a.employee_id = e.id
+      WHERE a.user_id = $1
+      ORDER BY a.date
+      `,
+      [userId]
     );
-    res.json(rows); // ✅ must return an array
+
+    res.json(rows);
   } catch (err) {
-    console.error(err); // logs in backend terminal
-    res.status(500).json({ error: "Failed to fetch all availability" });
+    res.status(500).json({ error: "Failed to fetch availability" });
   }
 };
 

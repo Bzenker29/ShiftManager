@@ -7,8 +7,11 @@ import {
   getAllAvailabilityController,
 } from "../controllers/availabilityController.js";
 
+import { requireAuth } from "../middleware/requireAuth.js";
+
 const router = express.Router();
 
+router.use(requireAuth);
 // Create unavailability (date-based)
 router.post("/", createAvailabilityController);
 
